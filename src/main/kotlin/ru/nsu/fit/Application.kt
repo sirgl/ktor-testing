@@ -33,10 +33,10 @@ import ru.nsu.fit.endpoint.rest.*
 import ru.nsu.fit.endpoint.service.MainFactory
 import java.util.*
 
-val ADMIN_LOGIN = "admin"
-val ADMIN_PASSWORD = "admin"
-val ADMIN_ROLE = "admin"
-val UNKNOWN_ROLE = "unknown"
+const val ADMIN_LOGIN = "admin"
+const val ADMIN_PASSWORD = "admin"
+const val ADMIN_ROLE = "admin"
+const val UNKNOWN_ROLE = "unknown"
 
 class RolePrincipal(
         val role: String
