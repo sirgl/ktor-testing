@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 import ru.nsu.fit.endpoint.data.Customer
 import java.util.*
 
-class RestClient(private val address: String,
+class RestClient(address: String,
                  private val login: String,
                  private val password: String) : EndpointClient {
 
@@ -27,16 +27,23 @@ class RestClient(private val address: String,
         return this
     }
 
+    private fun <T : Any?> HttpResponse<T>.log() : HttpResponse<T> {
+        logger.debug("Request: $body with status $statusText")
+        return this
+    }
+
     override fun removeCustomer(id: UUID) {
         Unirest.delete("$basePath/remove_customer/$id")
                 .header("Accept", "*/*")
                 .basicAuth(login, password).asString()
+                .log()
                 .verifyStatus()
     }
 
     override fun getHealthCheck(): Boolean {
         val result = Unirest.get("$basePath/health_check")
                 .basicAuth(login, password).asString()
+                .log()
                 .verifyStatus().body == "{\"status\": \"OK\"}"
         logger.info("health check ended with $result")
         return result
@@ -45,6 +52,7 @@ class RestClient(private val address: String,
 
     override fun getRole(): String? {
         val role = Unirest.get("$basePath/get_role").basicAuth(login, password).asJson()
+                .log()
                 .verifyStatus().body.`object`.get("role") as String?
         logger.info("Role request ended: $role")
         return role
@@ -55,6 +63,7 @@ class RestClient(private val address: String,
                 .header("Content-Type", "application/json")
                 .header("Accept", "*/*")
                 .basicAuth(login, password).asString()
+                .log()
                 .verifyStatus().body.parseList<Customer>()
         logger.info("Customers request ended, customers found ${customers.size}")
         return customers
@@ -68,6 +77,7 @@ class RestClient(private val address: String,
                 .body(mapper.writeValueAsString(customer))
                 .asString()
         val created = response
+                .log()
                 .verifyStatus().body.parse<Customer>()
         logger.info("Created customer")
         return created

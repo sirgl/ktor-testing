@@ -3,9 +3,11 @@ buildscript {
 
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "ru.d10xa:gradle-allure-plugin:0.5.5"
     }
 }
 
@@ -13,6 +15,7 @@ group 'sirgl'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'kotlin'
+apply plugin: 'ru.d10xa.allure'
 
 repositories {
     jcenter()
@@ -22,6 +25,7 @@ dependencies {
     testCompile group: 'org.testng', name: 'testng', version: '6.11'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile project(":service-client")
+    compile 'ru.yandex.qatools.allure:allure-testng-adaptor:1.4.16'
 }
 
 compileKotlin {
@@ -29,4 +33,7 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+allure {
+    allureReportDir = "$buildDir/allure-report"
 }

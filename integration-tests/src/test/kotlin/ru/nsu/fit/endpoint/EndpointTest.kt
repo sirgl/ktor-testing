@@ -7,6 +7,10 @@ import ru.nsu.fit.client.EndpointClient
 import ru.nsu.fit.client.RestClient
 import ru.nsu.fit.client.UnauthorizedException
 import ru.nsu.fit.endpoint.data.Customer
+import ru.yandex.qatools.allure.annotations.Description
+import ru.yandex.qatools.allure.annotations.Features
+import ru.yandex.qatools.allure.annotations.Severity
+import ru.yandex.qatools.allure.model.SeverityLevel
 
 
 class EndpointTest {
@@ -22,7 +26,11 @@ class EndpointTest {
             "pass"
     )
 
-    @Test fun `health check exists`() {
+    @Description("Health check successfully ends")
+    @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @Features("Customer feature")
+    fun `health check exists`() {
         assertTrue(unknownClient.getHealthCheck())
     }
 
