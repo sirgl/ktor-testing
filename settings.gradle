@@ -2,4 +2,5 @@ rootProject.name = 'ktor-testing'
 include 'service-client'
 include 'common'
 include 'integration-tests'
+include 'ui-testing'
 

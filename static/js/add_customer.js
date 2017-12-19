@@ -13,9 +13,9 @@ $(document).ready(function(){
                 alert("Email or password is empty");
             } else {
                 $.post({
-                    url: 'rest/create_customer',
+                    url: '/endpoint/rest/create_customer',
                     headers: {
-                        'Authorization': 'Basic ' + btoa('admin' + ':' + 'setup'),
+                        'Authorization': 'Basic ' + btoa('admin' + ':' + 'admin'),
                         'Content-Type': 'application/json'
                     },
                     data: JSON.stringify({
@@ -26,7 +26,7 @@ $(document).ready(function(){
                                              "balance":"0"
                                          })
                 }).done(function(data) {
-                     $.redirect('/endpoint/customers.html', {'login': 'admin', 'pass': 'setup', 'role': 'ADMIN'}, 'GET');
+                     $.redirect('customers.html', {'login': 'admin', 'pass': 'admin', 'role': 'admin'}, 'GET');
                 });
             }
         }

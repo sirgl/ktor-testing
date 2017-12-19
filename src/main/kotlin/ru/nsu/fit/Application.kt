@@ -5,10 +5,7 @@ import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.application.log
-import io.ktor.auth.Authentication
-import io.ktor.auth.Principal
-import io.ktor.auth.authentication
-import io.ktor.auth.basicAuthentication
+import io.ktor.auth.*
 import io.ktor.content.default
 import io.ktor.content.files
 import io.ktor.features.CallLogging
@@ -18,7 +15,8 @@ import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.locations.Locations
-import io.ktor.locations.*
+import io.ktor.locations.get
+import io.ktor.locations.post
 import io.ktor.pipeline.PipelineContext
 import io.ktor.request.receive
 import io.ktor.response.respond
@@ -53,12 +51,17 @@ fun main(args: Array<String>) {
                 configure(SerializationFeature.INDENT_OUTPUT, true)
             }
         }
-        install(Authentication) {
+        authentication {
             basicAuthentication("Basic") { credentials ->
                 if(credentials.name == ADMIN_LOGIN && credentials.password == ADMIN_PASSWORD)
                     RolePrincipal(ADMIN_ROLE)
                 else
                     RolePrincipal(UNKNOWN_ROLE)
+            }
+            intercept(AuthenticationPipeline.RequestAuthentication) {
+                if(context.basicAuthenticationCredentials() == null) {
+                    context.authentication.principal = RolePrincipal(UNKNOWN_ROLE)
+                }
             }
         }
         routing {
@@ -98,7 +101,6 @@ fun main(args: Array<String>) {
                     }
                     call.respond(id ?: "")
                 }
-
             }
             files("static")
             default("static/index.html")
